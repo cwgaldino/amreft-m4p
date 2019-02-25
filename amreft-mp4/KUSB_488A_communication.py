@@ -15,23 +15,44 @@ from pathlib import Path
 
 def init_gpib():
     '''
-    Enable computer to communicate via gpib with address 21
+    Enable computer to communicate via gpib with address 21.
 
-    This must be running nonstop. Run using a thread:
+    It starts a subprocess that opens the prompt and runs ../bin/init.exe.
 
-    import threading
-    init_thread = threading.Thread(target=init_gpib)
-    init_thread.start()
+    The process run indefinitely and must be terminated in the end by running
+    terminate_gpib(process)
+
+    Warning: Avoid running multiple instances of init_gpib().
+
+    :return: subprocess.Popen object
     '''
-    subprocess.call(str(Path('../bin/init.exe')), shell=True)
+
+    process = subprocess.Popen(str(Path('../bin/init.exe')), shell=True)
+
+    return process
+#	 subprocess.call(str(Path('../bin/init.exe')), shell=True)
 #    os.system('cmd.exe C:/Users/Carlos/Desktop/init.exe')
 #    subprocess.call('start cmd C:/Users/Carlos/Desktop/init.exe', shell=True)
 #    subprocess.call('cmd C:/Users/Carlos/Desktop/init.exe', shell=True)
 
 
+def terminate_gpib(process):
+    '''
+    Terminate GPIB communication.
+
+    :param process: A subprocess.Popen object initiated by init_gpib().
+    '''
+    return subprocess.Popen("TASKKILL /F /PID {pid} /T".format(pid=process.pid))
+
+
 def send_GPIB(message, device_address):
     '''
     Send a string via GPIB.
+
+    :param message: string message to be sent to the device.
+    :param device_adress: gpib adress of the device.
+
+    :return: message sent.
     '''
 
     # exe path
@@ -41,12 +62,16 @@ def send_GPIB(message, device_address):
 
     sent = str(subprocess.check_output(string2send, shell=True))
 
-    return sent.decode("utf-8")
+    return sent[2:-3]
 
 
-def receive_GPIB(device_address, bin_path):
+def receive_GPIB(device_address):
     '''
-    Receive a message via GPIB
+    Receive a message via GPIB.
+
+    :param device_adress: gpib adress of the device.
+
+    :return: message received from the device.
     '''
 
     # exe path
@@ -56,13 +81,4 @@ def receive_GPIB(device_address, bin_path):
 
     received = str(subprocess.check_output(string2receive, shell=True))
 
-    return received.decode("utf-8")
-
-# %% Tests
-
-#subprocess.call('C:/Users/Carlos/Desktop/sendGpib.exe *idn? 3', shell=True)
-#
-#subprocess.call('C:/Users/Carlos/Desktop/receiveGpib.exe 3', shell=True)
-#
-#sent1 = str(subprocess.check_output('C:/Users/Carlos/Desktop/sendGpib.exe *idn? 3', shell=True))
-#out1 = str(subprocess.check_output('C:/Users/Carlos/Desktop/receiveGpib.exe 3', shell=True))
+    return received[2:-2]

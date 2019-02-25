@@ -9,13 +9,23 @@ galdino@ifi.unicamp.br
 """
 
 
-from KUSB_488A_communication import send_GPIB, receive_GPIB
+from KUSB_488A_communication import init_gpib, send_GPIB, receive_GPIB
+import threading
 from pathlib import Path
 
 # %% Initial definitions
 
 address_2182A = 3
 bin_path = str(Path(r'..\bin'))
+
+# %% Initizalize communication
+
+init_thread = threading.Thread(target=init_gpib)
+init_thread.start()
+
+# Ask about threads if necessary
+#threading.active_count()
+#init_thread.isAlive()
 
 # %% Relevant commands
 # I could have done separete functions for each of this commands, but they are
@@ -45,11 +55,15 @@ send_GPIB('\":sens:volt:chan1:rang:auto ON\"', address_2182A)
 def v():
     '''
     Reads a voltage value in Volts.
-
-     address_2182A variables must be defined already. For example:
-        address_2182A = 3
     '''
+
+    address_2182A = 3
 
     send_GPIB(':READ?', address_2182A)
 
     return float(receive_GPIB(address_2182A))
+
+# %% Ask voltage
+
+voltage = v()
+print(voltage)
