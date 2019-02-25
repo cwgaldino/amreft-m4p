@@ -15,4 +15,4 @@ Instructions for dummies
 -------------------------
 Step-by-step instructions may be find in this document_.
 
-.. document: https://docs.google.com/document/d/1n4G4GZeCP3-Xgvwc65IpkFDdCy0WiHOE9Fh8y-N9Fao/edit?usp=sharing
+.. _document: https://docs.google.com/document/d/1n4G4GZeCP3-Xgvwc65IpkFDdCy0WiHOE9Fh8y-N9Fao/edit?usp=sharing
