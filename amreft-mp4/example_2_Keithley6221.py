@@ -14,7 +14,7 @@ from KUSB_488A_communication import init_gpib, terminate_gpib, send_GPIB, receiv
 
 comm_gpib = init_gpib()
 
-# %% Initial definitions
+# %% Device class
 
 class currentSource_6221():
     '''
