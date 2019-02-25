@@ -102,5 +102,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# not used docs images
+# Other stuff
 /docs/images/
+/amreft-m4p_V0_george_OLD/
+/Keithley_manuals/
+FinalReportGeorge.pdf
+/posterGeorge.pdf
