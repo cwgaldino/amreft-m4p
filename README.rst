@@ -5,8 +5,18 @@ amreft-m4p
 :Description: Set of python 3.7 scripts to control electronic devices via GPIB using KUSB-488A:USB to GPIB Interface Adapter
 
 
+Instructions for the Impatient
+-------------------------------
+-test0
+-test1
+
+
+Instructions for dummies
+-------------------------
+
+
 Installing keithley GPIB/USB drive
------------------------------------
+***********************************
 
 Download, extract, and install the keithley GPIB drive. Here is the link to download: https://www.tek.com/accessory/gpib488/9-2-0, or you may use the zip folder Keithley_GPIB488v92.zip from the projects folder.
 
