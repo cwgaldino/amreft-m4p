@@ -1,52 +1,95 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jan 21 15:52:09 2019
+Set of functions to control Lakeshore 340 temperature controller.
+
+Python 3.7
 
 @author: Carlos galdino
 galdino@ifi.unicamp.br
 """
 
+from KUSB_488A_communication import init_gpib, terminate_gpib, send_GPIB, receive_GPIB
 
-from galdinoFunctions_gpib_V1.py import *
+# %% Initizalize communication
 
+comm_gpib = init_gpib()
 
+# %% Device class
 
-# %% Initial definitions
-
-address_6221 = 2
-bin_path = r'D:\amreft-m4p\amreft-m4p_V1_galdino\bin'
-
-# %% Relevant commands
-# I could have done separete functions for each of this commands, but they are
-# used only once (or maybe twice) in the script so it is not worthy.
-
-# Reset Instrument
-send_GPIB('*RST', address_6221, bin_path)
-
-# Query Heater Output
-send_GPIB('HTR?', address_6221, bin_path)
-
-# Query Heater Status
-send_GPIB('HTRST?', address_6221, bin_path)
-
-# %% Functions
-
-def t(*argv):
+class lakeshore_340():
     '''
-    t() queries Setpoint temperature.
-    t(setpoint) sets the setpoint temperature
-
-    bin_path and address_6221 variables must be defined already. For example:
-        address_6221 = 2
-        bin_path = r'D:\amreft-m4p\amreft-m4p_V1_galdino\bin'
+    Lakeshore 340 temperature controller class.
     '''
 
-    if len(argv)==1:
-#        print('het')
-        send_GPIB('\"SETP ' + str(args[0]) + '\"', address_6221, bin_path)
-    else:
-#        print('iii')
-        send_GPIB('SETP?', address_6221, bin_path)
-        return float(receive_GPIB(address_2182A, bin_path))
+    def __init__(self, gpib_address):
+        self.gpib_address = gpib_address
+
+         # Configure Control Loop Parameters
+        send_GPIB('CSET 1 A 1 on', self.gpib_address)
+        self.input = 'A'
+        self.controlLoop = '1'
 
 
+    def heater_range(self, *args):
+        '''
+        heater_range() >> Query Heater Range.
+        heater_range(0-5) >> Configure Heater Range (from 0 to 5).
+
+        :params range: heater range.
+
+        :Return: the heater range.
+        '''
+        if len(args)==1:
+            send_GPIB('Range ' + str(args[0]), self.gpib_address)
+        else:
+            send_GPIB('RANGE?', self.gpib_address)
+            return float(receive_GPIB(self.gpib_address))
+
+
+    def heater_output(self):
+        '''
+        Query Heater Output.
+
+        :Return: heater output in percent.
+        '''
+        send_GPIB('HTR?', self.gpib_address)
+        return float(receive_GPIB(self.gpib_address))
+
+    def get_setpoint(self):
+        '''
+        Query Control Loop Setpoint.
+
+        :Return: Returns the control loop setpoint.
+        '''
+        send_GPIB('SETP? ' + self.controlLoop, self.gpib_address)
+        return float(receive_GPIB(self.gpib_address))
+
+    def t(self, *args):
+        '''
+        t() queries temperature.
+        t(setpoint) sets the setpoint temperature of the selected input.
+
+        :params setpoint: temperature setpoint in Kelvin.
+        '''
+
+        if len(args)==1:
+            send_GPIB('\"SETP ' + self.controlLoop + ', ' + str(args[0]) + '\"', self.gpib_address)
+        else:
+            send_GPIB('KRDG? ' + self.input, self.gpib_address)
+            return float(receive_GPIB(self.gpib_address))
+
+
+# %% Initialize lakeshore 340
+
+address_340 = 2
+L340 = lakeshore_340(address_340)
+
+# %% Set temperature
+
+L340.t(310)  # set setpoint to 310 K
+L340.t()  # Query setpoint
+L340.t()  # Query setpoints
+
+# %% Terminate communication
+
+terminate_gpib(comm_gpib)
