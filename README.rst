@@ -7,7 +7,7 @@ amreft-m4p
 
 Instructions for the Impatient
 -------------------------------
--test0
+-Install keithley KUSB-488A GPIB/USB drive
 -test1
 
 
