@@ -74,6 +74,51 @@ There are 3 C scripts that must be compiled: init.c, receiveGpib.c, and sendGpib
 
 .. image:: docs/images/18.png
 
+To compile the C scripts open the prompt  and go to the folder where the scripts are located (src folder). Then type the commands:
+
+gcc -Wall init.c ../lib/ieee_32m.lib -o ../bin/init.exe
+gcc -Wall receiveGpib.c ../lib/ieee_32m.lib -o ../bin/receiveGpib.exe
+gcc -Wall sendGpib.c ../lib/ieee_32m.lib -o ../bin/sendGpib.exe
+
+If everything goes okay you must have three exe files in the bin folder.
+
+
+Python gpib functions
+***********************************************
+
+The core python script is galdinoFunctions_gpib_V1.py. In this script we got three functions, which are the C functions ‘equivalent’ in python. : 
+
+init_gpib()
+Configures the computer to communicate via gpib with address 21. If another computer is added to the network another C script must be written with a different address.
+
+send_GPIB(message, device_address, bin_path)
+Sends a string (message) to the device_address. The bin_path is the directory path where the exe files are, like: bin_path = r'D:\amreft-m4p\amreft-m4p_V1_galdino\bin'
+
+receive_GPIB(device_address, bin_path)
+Receives a string (message) from the device_address. The bin_path is the directory path where the exe files are, like: bin_path = r'D:\amreft-m4p\amreft-m4p_V1_galdino\bin'
+
+Import galdinoFunctions_gpib_V1.py whenever you need these functions by using,
+
+.. highlight:: python
+
+from galdinoFunctions_gpib_V1.py import *
+
+
+
+Python gpib functions
+***********************************************
+
+Before using the keithley 2182A nanovoltmeter remember to adjust FILTER, REL, and RATE. I did not implement that on the script because I think it is easier to set these by hand. If necessary, we may implement these on a future version of the code. 
+
+Note that bin_path and address_2182A variables must be defined already. For example:
+address_2182A = 3
+bin_path = r'D:\amreft-m4p\amreft-m4p_V1_galdino\bin'
+The important functions are: 
+v()
+Reads a voltage value in Volts.
+
+send_GPIB('*RST', address_2182A, bin_path)
+Restore GPIB and remote options to default. This is necessary to change a few configurations, e.g. triggering mode, that works better in remote mode.
 
 
 
