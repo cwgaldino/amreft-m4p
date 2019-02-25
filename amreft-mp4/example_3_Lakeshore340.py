@@ -25,7 +25,7 @@ class lakeshore_340():
         self.gpib_address = gpib_address
 
          # Configure Control Loop Parameters
-        send_GPIB('CSET 1 A 1 on', self.gpib_address)
+        send_GPIB('\"CSET 1 A 1 on\"', self.gpib_address)
         self.input = 'A'
         self.controlLoop = '1'
 
@@ -40,7 +40,7 @@ class lakeshore_340():
         :Return: the heater range.
         '''
         if len(args)==1:
-            send_GPIB('Range ' + str(args[0]), self.gpib_address)
+            send_GPIB('\"Range ' + str(args[0]) + '\"', self.gpib_address)
         else:
             send_GPIB('RANGE?', self.gpib_address)
             return float(receive_GPIB(self.gpib_address))
@@ -48,7 +48,7 @@ class lakeshore_340():
 
     def heater_output(self):
         '''
-        Query Heater Output.
+        Query Heater Output (0 to 100%).
 
         :Return: heater output in percent.
         '''
@@ -61,7 +61,7 @@ class lakeshore_340():
 
         :Return: Returns the control loop setpoint.
         '''
-        send_GPIB('SETP? ' + self.controlLoop, self.gpib_address)
+        send_GPIB('\"SETP? ' + self.controlLoop + '\"', self.gpib_address)
         return float(receive_GPIB(self.gpib_address))
 
     def t(self, *args):
@@ -75,20 +75,26 @@ class lakeshore_340():
         if len(args)==1:
             send_GPIB('\"SETP ' + self.controlLoop + ', ' + str(args[0]) + '\"', self.gpib_address)
         else:
-            send_GPIB('KRDG? ' + self.input, self.gpib_address)
+            send_GPIB('\"KRDG? ' + self.input + '\"', self.gpib_address)
             return float(receive_GPIB(self.gpib_address))
 
 
 # %% Initialize lakeshore 340
 
-address_340 = 2
+address_340 = 1
 L340 = lakeshore_340(address_340)
 
 # %% Set temperature
 
-L340.t(310)  # set setpoint to 310 K
-L340.t()  # Query setpoint
-L340.t()  # Query setpoints
+L340.t(300)  # set setpoint to 300 K
+L340.t()  # Query temperature
+temperature = L340.t()  # Query temperature and save in a variable
+
+L340.heater_output()  # Query heater output
+
+L340.heater_range(0)  # Turn heater off
+L340.heater_range()  # Query heater range
+
 
 # %% Terminate communication
 

@@ -81,4 +81,5 @@ def receive_GPIB(device_address):
 
     received = str(subprocess.check_output(string2receive, shell=True))
 
-    return received[2:-2]
+    return received[2:-1]
+

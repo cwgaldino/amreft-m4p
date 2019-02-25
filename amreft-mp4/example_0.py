@@ -14,8 +14,8 @@ comm_gpib = init_gpib()
 
 # %% Send and receive identification message on adress 3
 
-sent1 = send_GPIB('*idn?', 3)
-received1 = receive_GPIB(3)
+sent1 = send_GPIB('*idn?', 1)
+received1 = receive_GPIB(1)
 print(received1)
 
 # %% Terminate communication
