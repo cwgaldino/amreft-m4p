@@ -20,7 +20,7 @@ class nanovoltimeter_2182A():
     '''
     Keithley nanovoltimeter 2182A class.
 
-    .. note: I could have done functions for every and each command, but thats over kill I think
+    .. note: I could have done functions for every and each command, but I think thats overkill.
 
     .. note: Also, important commands like: ACAL, FILTER, REL, and RATE were not implemented because I think it is safer to apply these by hand.
     '''
