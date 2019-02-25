@@ -8,62 +8,68 @@ Python 3.7
 galdino@ifi.unicamp.br
 """
 
-
-from KUSB_488A_communication import init_gpib, send_GPIB, receive_GPIB
-import threading
-from pathlib import Path
-
-# %% Initial definitions
-
-address_2182A = 3
-bin_path = str(Path(r'..\bin'))
+from KUSB_488A_communication import init_gpib, terminate_gpib, send_GPIB, receive_GPIB
 
 # %% Initizalize communication
 
-init_thread = threading.Thread(target=init_gpib)
-init_thread.start()
+comm_gpib = init_gpib()
 
-# Ask about threads if necessary
-#threading.active_count()
-#init_thread.isAlive()
+# %% Initial definitions
 
-# %% Relevant commands
-# I could have done separete functions for each of this commands, but they are
-# used only once (or maybe twice) in the script so it is not worthy.
-
-# I think it is easier to set the ACAL, FILTER, REL, and RATE by hand.
-
-# Restore GPIB and remote options to default.
-send_GPIB('*RST', address_2182A)
-
-# Select function: ‘VOLTage’ or ‘TEMPerature’.
-send_GPIB('\":sens:func \'volt\'\"', address_2182A)
-
-# Select channel: 0 (internal temperature sensor), 1, or 2.
-send_GPIB('\":sens:chan 1\"', address_2182A)
-
-# Select channel 1 measure range; <n> = range.
-# DCV1 function has five measurement ranges: 10mV, 100mV, 1V, 10V, and 100V
-# DCV2 function has three measurement ranges: 100mV, 1V, and 10V
-send_GPIB('\":sens:volt:chan1:rang 1\"', address_2182A)
-
-# Enable/disable channel 1 auto range; (ON or OFF).
-send_GPIB('\":sens:volt:chan1:rang:auto ON\"', address_2182A)
-
-# %% Functions
-
-def v():
+class nanovoltimeter_2182A():
     '''
-    Reads a voltage value in Volts.
+    Keithley nanovoltimeter 2182A class.
+
+    .. note: I could have done functions for every and each command, but thats over kill I think
+
+    .. note: Also, important commands like: ACAL, FILTER, REL, and RATE were not implemented because I think it is safer to apply these by hand.
     '''
 
-    address_2182A = 3
+    def __init__(self, gpib_address):
+        self.gpib_address = gpib_address
 
-    send_GPIB(':READ?', address_2182A)
+        # INITIAL CONFIGURATION (Edit acording to your needs) =============
+        # Restore GPIB and remote options to default.
+        send_GPIB('*RST', gpib_address)
 
-    return float(receive_GPIB(address_2182A))
+        # Select function: ‘VOLTage’ or ‘TEMPerature’.
+        send_GPIB('\":sens:func \'volt\'\"', gpib_address)
+
+        # Select channel: 0 (internal temperature sensor), 1, or 2.
+        send_GPIB('\":sens:chan 1\"', gpib_address)
+
+        # Enable/disable channel 1 auto range; (ON or OFF).
+        send_GPIB('\":sens:volt:chan1:rang:auto ON\"', gpib_address)
+
+        # Select channel 1 measure range; <n> = range.
+        # DCV1 function has five measurement ranges: 10mV, 100mV, 1V, 10V, and 100V
+        # DCV2 function has three measurement ranges: 100mV, 1V, and 10V
+        # send_GPIB('\":sens:volt:chan1:rang 1\"', gpib_address)
+
+    def v(self):
+        '''
+        Reads a voltage value in Volts.
+
+        :return: measured voltage in volts.
+        '''
+
+        send_GPIB(':READ?', self.gpib_address)
+
+        return float(receive_GPIB(self.gpib_address))
+
+
+# %% Initialize nanovoltimeter
+
+address_2182A = 3
+K_2182A = nanovoltimeter_2182A(address_2182A)
 
 # %% Ask voltage
 
-voltage = v()
+voltage = K_2182A.v()
 print(voltage)
+
+# %% Terminate communication
+
+terminate_gpib(comm_gpib)
+
+

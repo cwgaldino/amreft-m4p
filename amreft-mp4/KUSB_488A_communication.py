@@ -62,7 +62,7 @@ def send_GPIB(message, device_address):
 
     sent = str(subprocess.check_output(string2send, shell=True))
 
-    return sent[2:-3]
+    return sent[2:-1]
 
 
 def receive_GPIB(device_address):
