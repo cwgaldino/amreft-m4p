@@ -103,4 +103,4 @@ venv.bak/
 .mypy_cache/
 
 # not used docs images
-/docs/images
+/docs/images/
