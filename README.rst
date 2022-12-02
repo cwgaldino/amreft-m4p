@@ -4,16 +4,10 @@ amreft-m4p
 :Author: Carlos Galdino <galdino@ifi.unicamp.br> and George Kontogiorgos <gekontogiorgos@gmail.com>
 :Description: Set of python 3.7 scripts to control electronic devices via GPIB using KUSB-488A:USB to GPIB Interface Adapter
 
-Instructions for the Impatient
--------------------------------
--Install keithley KUSB-488A GPIB/USB drive
+Step-by-step instructions may be found in this document_.
 
--Import the module **galdinoFunctions_gpib_V1.py** to your python script.
+Instructions on how to compile the core C scripts that enables the GPIB communication can be found here_.
 
--...
+.. _document: https://docs.google.com/document/d/e/2PACX-1vSWI2M4BbF7u8iOK5QlwezCvIdZwSsnRNf89RUyv9abaaG2MMd_omOqpyfrfhUSyh5kAN2HwWiBvCuL/pub
 
-Instructions for dummies
--------------------------
-Step-by-step instructions may be find in this document_.
-
-.. _document: https://docs.google.com/document/d/1n4G4GZeCP3-Xgvwc65IpkFDdCy0WiHOE9Fh8y-N9Fao/edit?usp=sharing
+.. _here: https://docs.google.com/document/d/e/2PACX-1vQ0yOnPWwMYTjGRespR3XMZK7ADoythKbZZq5SOjlhrj7UT9L5yOPTdCc4ufhqQgt3L_JX-1a71Von-/pub
