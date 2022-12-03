@@ -13,19 +13,18 @@ from pathlib import Path
 # %% Core functions
 
 
-def init_gpib():
-    '''
-    Enable computer to communicate via gpib with address 21.
+def initialize():
+    """Initialize communication with controller address 21.
 
     It starts a subprocess that opens the prompt and runs ../bin/init.exe.
 
-    The process run indefinitely and must be terminated in the end by running
-    terminate_gpib(process)
+    The process run indefinitely and must be terminated by running
+    terminate(process)
 
-    Warning: Avoid running multiple instances of init_gpib().
+    Warning: Do not run multiple instances of initialize().
 
     :return: subprocess.Popen object
-    '''
+    """
 
     process = subprocess.Popen(str(Path('../bin/init.exe')), shell=True)
 
@@ -36,50 +35,46 @@ def init_gpib():
 #    subprocess.call('cmd C:/Users/Carlos/Desktop/init.exe', shell=True)
 
 
-def terminate_gpib(process):
-    '''
-    Terminate GPIB communication.
+def terminate(process):
+    """Terminate communication.
 
-    :param process: A subprocess.Popen object initiated by init_gpib().
-    '''
+    :param process: A subprocess.Popen object initiated by initialize().
+    """
     return subprocess.Popen("TASKKILL /F /PID {pid} /T".format(pid=process.pid))
 
 
-def send_GPIB(message, device_address):
-    '''
-    Send a string via GPIB.
+def send(message, address):
+    """Send message via GPIB.
 
     :param message: string message to be sent to the device.
-    :param device_adress: gpib adress of the device.
+    :param address: gpib address of the device.
 
     :return: message sent.
-    '''
+    """
 
     # exe path
     func_path = str(Path('../bin/sendGpib.exe'))
 
-    string2send = str(func_path + ' ' + message+' ' + str(device_address))
+    string2send = str(func_path + ' ' + message+' ' + str(address))
 
     sent = str(subprocess.check_output(string2send, shell=True))
 
     return sent[2:-1]
 
 
-def receive_GPIB(device_address):
-    '''
-    Receive a message via GPIB.
+def receive(device_address):
+    """Receive a message via GPIB.
 
-    :param device_adress: gpib adress of the device.
+    :param address: gpib address of the device.
 
     :return: message received from the device.
-    '''
+    """
 
     # exe path
     func_path = str(Path('../bin/receiveGpib.exe'))
 
-    string2receive = str(func_path + ' ' + str(device_address))
+    string2receive = str(func_path + ' ' + str(address))
 
     received = str(subprocess.check_output(string2receive, shell=True))
 
     return received[2:-1]
-

@@ -6,18 +6,15 @@ amreft-m4p example script 0.
 galdino@ifi.unicamp.br
 """
 
-from KUSB_488A_communication import init_gpib, terminate_gpib, send_GPIB, receive_GPIB
+import KUSB_488A_communication as gpib
 
 # %% Initizalize communication
+comm = initizalize()
 
-comm_gpib = init_gpib()
-
-# %% Send and receive identification message on adress 3
-
-sent1 = send_GPIB('*idn?', 1)
-received1 = receive_GPIB(1)
+# %% Send and receive identification (*idn?) message at adress 3
+sent1 = gpib.send('*idn?', 3)
+received1 = gpib.receive(3)
 print(received1)
 
 # %% Terminate communication
-
-terminate_gpib(comm_gpib)
+gpib.terminate(comm)
