@@ -10,9 +10,6 @@ galdino@ifi.unicamp.br
 import subprocess
 from pathlib import Path
 
-# %% Core functions
-
-
 def initialize():
     """Initialize communication with controller address 21.
 
@@ -25,15 +22,9 @@ def initialize():
 
     :return: subprocess.Popen object
     """
-
-    process = subprocess.Popen(str(Path('../bin/init.exe')), shell=True)
+    process = subprocess.Popen('initGPIB.exe', shell=True)
 
     return process
-#	 subprocess.call(str(Path('../bin/init.exe')), shell=True)
-#    os.system('cmd.exe C:/Users/Carlos/Desktop/init.exe')
-#    subprocess.call('start cmd C:/Users/Carlos/Desktop/init.exe', shell=True)
-#    subprocess.call('cmd C:/Users/Carlos/Desktop/init.exe', shell=True)
-
 
 def terminate(process):
     """Terminate communication.
@@ -41,7 +32,6 @@ def terminate(process):
     :param process: A subprocess.Popen object initiated by initialize().
     """
     return subprocess.Popen("TASKKILL /F /PID {pid} /T".format(pid=process.pid))
-
 
 def send(message, address):
     """Send message via GPIB.
@@ -51,29 +41,20 @@ def send(message, address):
 
     :return: message sent.
     """
-
-    # exe path
-    func_path = str(Path('../bin/sendGpib.exe'))
-
-    string2send = str(func_path + ' ' + message+' ' + str(address))
+    string2send = str('sendGPIB.exe' + ' \"' + message + '\" ' + str(address))
 
     sent = str(subprocess.check_output(string2send, shell=True))
 
     return sent[2:-1]
 
-
-def receive(device_address):
+def receive(address):
     """Receive a message via GPIB.
 
     :param address: gpib address of the device.
 
     :return: message received from the device.
     """
-
-    # exe path
-    func_path = str(Path('../bin/receiveGpib.exe'))
-
-    string2receive = str(func_path + ' ' + str(address))
+    string2receive = str('receiveGPIB.exe' + ' ' + str(address))
 
     received = str(subprocess.check_output(string2receive, shell=True))
 

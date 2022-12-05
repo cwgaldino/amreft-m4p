@@ -6,15 +6,21 @@ amreft-m4p example script 0.
 galdino@ifi.unicamp.br
 """
 
+# %% add amreft-m4p to the python PATH variable
+import sys
+from pathlib import Path
+sys.path.append(str(Path(r'<PATH-to-amreft-m4p>\amreft-mp4')))
+
+# %% import KUSB_488A_communication
 import KUSB_488A_communication as gpib
 
 # %% Initizalize communication
-comm = initizalize()
+comm = gpib.initialize()
 
 # %% Send and receive identification (*idn?) message at adress 3
-sent1 = gpib.send('*idn?', 3)
-received1 = gpib.receive(3)
-print(received1)
+sent = gpib.send('*idn?', 3)
+received = gpib.receive(3)
+print(received)
 
 # %% Terminate communication
 gpib.terminate(comm)

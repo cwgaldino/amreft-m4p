@@ -10,14 +10,9 @@ galdino@ifi.unicamp.br
 
 import KUSB_488A_communication as gpib
 
-# %% Initizalize communication
-comm = initizalize()
-
 # %% Device class
-class Nanovoltimeter_2182A():
-    """Keithley nanovoltimeter 2182A class.
-
-    .. note: Also, important commands like: ACAL, FILTER, REL, and RATE were not implemented because I think it is safer to use these by hand.
+class Multimeter_34410A():
+    """Agilent multimeter 34410A.
 
     :param address: gpib address of the device.
     """
@@ -30,13 +25,13 @@ class Nanovoltimeter_2182A():
         gpib.send('*RST', address)
 
         # Select function: ‘VOLTage’ or ‘TEMPerature’.
-        gpib.send('\":sens:func \'volt\'\"', address)
+        gpib.send(":sens:func \'volt\'", address)
 
         # Select channel: 0 (internal temperature sensor), 1, or 2.
-        gpib.send('\":sens:chan 1\"', address)
+        gpib.send(':sens:chan 1', address)
 
         # Enable/disable channel 1 auto range; (ON or OFF).
-        gpib.send('\":sens:volt:chan1:rang:auto ON\"', address)
+        gpib.send(':sens:volt:chan1:rang:auto ON', address)
 
         # Select channel 1 measure range; <n> = range.
         # DCV1 function has five measurement ranges: 10mV, 100mV, 1V, 10V, and 100V
@@ -44,20 +39,11 @@ class Nanovoltimeter_2182A():
         # gpib.send('\":sens:volt:chan1:rang 1\"', address)
 
     def v(self):
-        """Reads a voltage (Volts)."""
+        """Read voltage (Volts)."""
 
         gpib.send(':READ?', self.address)
 
-        return float(gpib.receive(self.address))
-
-
-# %% Initialize nanovoltimeter
-address_2182A = 3
-K_2182A = Nanovoltimeter_2182A(address_2182A)
-
-# %% get voltage
-voltage = K_2182A.v()
-print(voltage)
-
-# %% Terminate communication
-gpib.terminate(comm)
+        try:
+            return float(gpib.receive(self.address))
+        except ValueError:
+            print('ERROR: Communication lost.')
