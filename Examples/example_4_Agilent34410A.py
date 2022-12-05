@@ -21,7 +21,7 @@ from Agilent import Multimeter_34410A
 comm = gpib.initizalize()
 
 # %% Initialize nanovoltimeter
-address_34410A = 3
+address_34410A = 22
 A34410A = Multimeter_34410A(address_34410A)
 
 # %% get voltage

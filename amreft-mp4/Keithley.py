@@ -56,13 +56,13 @@ class CurrentSource_6221():
         """Turn output off."""
         return gpib.send('OUTP OFF', self.address)
 
-    def AutoRange_ON(self):
+    def auto_range_ON(self):
         """Enables source autorange."""
-        return gpib.send('CURR:RAN:AUTO ON', self.address)
+        return gpib.send('CURR:RANG:AUTO ON', self.address)
 
-    def AutoRange_OFF(self):
+    def auto_range_OFF(self):
         """Disables source autorange."""
-        return gpib.send('CURR:RAN:AUTO OFF', self.address)
+        return gpib.send('CURR:RANG:AUTO OFF', self.address)
 
     def clear(self):
         """Turns output off and sets output level to zero."""
